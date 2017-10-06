@@ -252,7 +252,7 @@ MonoBehaviour:
   - {fileID: 114271283603575496, guid: c151377dc1836a948ae24000deaaae94, type: 2}
   spawnY: 20
   spawnX: 0
-  spawnXRange: 9
+  spawnXRange: 5
   startingVelocity: -1
   dragRate: 5
   dragReductionRate: 0.001
