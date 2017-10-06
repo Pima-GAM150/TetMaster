@@ -11,7 +11,7 @@ public class Tracker : MonoBehaviour {
 
 	public Text scoreLabel;
 
-	List<Transform> blocksInGame = new List<Transform>();
+	[HideInInspector] public List<Transform> blocksInGame = new List<Transform>();
 
 	public void AddPiece( Piece newPiece ) {
 		foreach( Transform block in newPiece.blocks ) {

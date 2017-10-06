@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class Controller : MonoBehaviour {
 
-	public float slamSpeed = 1f;
-    public static int gridWeight = 16;
-    public static int gridHeight = 10;
-    public static Transform[,] grid = new Transform[gridWeight, gridHeight];
+	const float blockSize = 1.51f;
 
-    public Transform leftWall;
+	public Tracker tracker;
+
+	public float slamSpeed = 1f;
+
+  public Transform leftWall;
 	public Transform rightWall;
 
 	[HideInInspector] public Piece currentPiece;
@@ -29,6 +30,35 @@ public class Controller : MonoBehaviour {
 			foreach( Transform block in currentPiece.blocks ) {
 				if( block.position.x + horiz * 2f < leftWall.position.x || block.position.x + horiz * 2f > rightWall.position.x ) {
 					canMoveThatWay = false;
+				}
+			}
+
+			// look at all other blocks and see if they have the same y
+			// then see if they would have the same x if moved
+
+			for( int otherIndex = 0; otherIndex < tracker.blocksInGame.Count; otherIndex++ ) {
+				Transform otherBlock = tracker.blocksInGame[otherIndex];
+
+				if( currentPiece.blocks.Contains( otherBlock ) ) continue;
+
+				for( int myIndex = 0; myIndex < currentPiece.blocks.Count; myIndex++ ) {
+					Transform myBlock = currentPiece.blocks[myIndex];
+
+					float yDistToBlock = Mathf.Abs( myBlock.transform.position.y - otherBlock.transform.position.y );
+					if( yDistToBlock > blockSize ) continue;
+
+					float xTravelToBlock = otherBlock.transform.position.x - myBlock.transform.position.x;
+
+					if( horiz > 0f ) {
+						if( xTravelToBlock < blockSize ) {
+							canMoveThatWay = false;
+						}
+					}
+					else {
+						if( xTravelToBlock > -blockSize ) {
+							canMoveThatWay = false;
+						}
+					}
 				}
 			}
 			
